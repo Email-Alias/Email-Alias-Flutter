@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Email Alias
+Comment=App to create aliases for a email on a mailcow server
+Exec=/opt/share/email-alias/email_alias
+Icon=/opt/share/email-alias/Icon.svg
+Terminal=false
+Type=Application
+Categories=Utility;
