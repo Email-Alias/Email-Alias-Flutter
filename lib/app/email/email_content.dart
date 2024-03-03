@@ -69,6 +69,13 @@ class _EmailContentState extends State<EmailContent> {
                 icon: const Icon(Icons.add),
               ),
               const SettingsIcon(),
+              IconButton(
+                onPressed: () async {
+                  await ConfigController.instance.reset();
+                  await _box.clear();
+                },
+                icon: const Icon(Icons.logout),
+              ),
             ],
           ),
           body: RefreshIndicator(

@@ -33,17 +33,6 @@ final class SettingsContent extends StatelessWidget {
                       tiles: [
                         _LocaleListTile(controller: controller),
                         _ThemeListTile(controller: controller),
-                        SettingsTile(
-                          leading: const Icon(Icons.restart_alt),
-                          title: Text(localizations.resetApp),
-                          onPressed: (final _) async {
-                            await controller.reset();
-                            await ConfigController.instance.reset();
-                            if (context.mounted) {
-                              const HomeRoute().go(context);
-                            }
-                          },
-                        ),
                       ],
                     ),
                   ],
