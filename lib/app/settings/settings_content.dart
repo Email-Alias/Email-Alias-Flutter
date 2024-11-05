@@ -20,7 +20,7 @@ final class SettingsContent extends StatelessWidget {
         title: Text(localizations.settings),
       ),
       body: ValueListenableBuilder(
-        valueListenable: controller.settingsListenable,
+        valueListenable: controller,
         builder: (final _, final __, final ___) =>
           Column(
             children: [

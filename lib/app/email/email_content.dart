@@ -22,7 +22,6 @@ final class EmailContent extends StatefulWidget {
 }
 
 class _EmailContentState extends State<EmailContent> {
-  final _box = Hive.box<Email>('emails');
   final _controller = SearchController();
 
   var _search = '';
@@ -30,7 +29,7 @@ class _EmailContentState extends State<EmailContent> {
 
   @override
   void initState() {
-    unawaited(_loadEmails());
+    unawaited(loadEmails());
     _controller.addListener(() {
       setState(() {
         _search = _controller.text;
@@ -43,141 +42,141 @@ class _EmailContentState extends State<EmailContent> {
   @override
   Widget build(final BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    return ListenableBuilder(
-      listenable: _box.listenable(),
-      builder: (final _, final __) {
-        final emails = _filterEmail(_box.values);
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(localizations.aliases),
-            actions: [
-              IconButton(
-                onPressed: () async {
-                  final success = await showDialog<bool>(
-                    context: context,
-                    builder: (final _) =>
-                      const Dialog(
-                        child: ScaffoldMessenger(
-                          child: AddEmailContent(),
-                        ),
-                      ),
-                  );
-                  if (success ?? false) {
-                    await _loadEmails();
-                  }
-                },
-                icon: const Icon(Icons.add),
-              ),
-              const SettingsIcon(),
-              IconButton(
-                onPressed: () async {
-                  await ConfigController.instance.reset();
-                  await _box.clear();
-                },
-                icon: const Icon(Icons.logout),
-              ),
-            ],
-          ),
-          body: RefreshIndicator(
-            onRefresh: () async {
-              await _loadEmails();
-            },
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: SearchAnchor.bar(
-                    viewHintText: localizations.search,
-                    searchController: _controller,
-                    suggestionsBuilder: (final context, final controller) {
-                      _searchContext = context;
-                      final emails = _filterEmail(_box.values);
-                      return emails.map((final e) => _EmailListTile(
-                        email: e,
-                        onTap: () {
-                          controller.closeView(e.privateComment);
-                          setState(() {
-                            _search = e.description(localizations: localizations);
-                          });
-                        },
-                      ),);
-                    },
-                  ),
+    return EmailKeyboardListener(
+      child: StreamBuilder(
+        stream: emailDatabase.emailDao.getAllStream(),
+        builder: (final _, final snapshot) {
+          final emails = _filterEmail(snapshot.data ?? []);
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(localizations.emails),
+              actions: [
+                IconButton(
+                  onPressed: () async {
+                    await showAddEmailDialog(context: context);
+                  },
+                  icon: const Icon(Icons.add),
                 ),
-                Expanded(
-                  child: ListView.separated(
-                    itemCount: emails.length,
-                    itemBuilder: (final _, final i) {
-                      final email = emails[i];
-                      return Dismissible(
-                        key: Key(email.id.toString()),
-                        direction: DismissDirection.endToStart,
-                        background: const ColoredBox(
-                          color: Colors.red,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: EdgeInsets.all(20),
-                              child: Icon(Icons.delete),
-                            ),
-                          ),
-                        ),
-                        confirmDismiss: (final _) async =>
-                          showDialog(
-                            context: context,
-                            builder: (final context) =>
-                              AlertDialog(
-                                title: Text(localizations.reallyDeleteEmail),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      context.pop(true);
-                                    },
-                                    child: Text(localizations.yes),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      context.pop(false);
-                                    },
-                                    child: Text(localizations.no),
-                                  ),
-                                ],
-                              ),
-                          ),
-                        onDismissed: (final _) async {
-                          await api.deleteEmail(id: email.id);
-                          await _loadEmails();
-                        },
-                        child: _EmailListTile(
-                          email: email,
-                          onTap: () async {
-                            DetailEmailRoute(comment: email.privateComment!, address: email.address).go(context);
-                          },
-                          trailing: IconButton(
-                            onPressed: () async {
-                              await _copyToClipboard(email: email);
-                            },
-                            icon: const Icon(Icons.copy),
-                          ),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (final _, final __) => const Divider(),
-                  ),
+                const SettingsIcon(),
+                IconButton(
+                  onPressed: () async {
+                    await ConfigController.instance.logout();
+                  },
+                  icon: const Icon(Icons.logout),
                 ),
               ],
             ),
-          ),
-        );
-      },
+            body: RefreshIndicator(
+              onRefresh: () async {
+                await loadEmails();
+              },
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: SearchAnchor.bar(
+                      viewHintText: localizations.search,
+                      searchController: _controller,
+                      suggestionsBuilder: (final context, final controller) {
+                        _searchContext = context;
+                        return _filterEmail(snapshot.data ?? []).map((final e) => _EmailListTile(
+                          email: e,
+                          onTap: () {
+                            controller.closeView(e.privateComment);
+                            setState(() {
+                              _search = e.description(localizations: localizations);
+                            });
+                          },
+                        ),);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: emails.length,
+                      itemBuilder: (final _, final i) {
+                        final email = emails[i];
+                        return Dismissible(
+                          key: Key(email.id.toString()),
+                          direction: DismissDirection.endToStart,
+                          background: const ColoredBox(
+                            color: Colors.red,
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Icon(Icons.delete),
+                              ),
+                            ),
+                          ),
+                          confirmDismiss: (final _) async =>
+                            showDialog(
+                              context: context,
+                              builder: (final context) =>
+                                AlertDialog(
+                                  title: Text(localizations.reallyDeleteEmail),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        context.pop(true);
+                                      },
+                                      child: Text(localizations.yes),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        context.pop(false);
+                                      },
+                                      child: Text(localizations.no),
+                                    ),
+                                  ],
+                                ),
+                            ),
+                          onDismissed: (final _) async {
+                            if (!ConfigController.instance.testMode) {
+                              await api.deleteEmail(id: email.id);
+                            }
+                            await emailDatabase.emailDao.deleteEmail(email);
+                          },
+                          child: _EmailListTile(
+                            email: email,
+                            onTap: () {
+                              showEmailDetail(
+                                context: context,
+                                email: email,
+                              );
+                            },
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  onPressed: () async {
+                                    await email.copyToClipboard(localizations: localizations);
+                                  },
+                                  icon: const Icon(Icons.copy),
+                                ),
+                                IconButton(
+                                  onPressed: () async {
+                                    email.active = !email.active;
+                                    await api.updateEmail(id: email.id, active: email.active);
+                                    await emailDatabase.emailDao.updateEmail(email);
+                                  },
+                                  icon: email.active ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (final _, final __) => const Divider(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
-  }
-
-  Future<void> _loadEmails() async {
-    var emails = await api.getEmails();
-    emails = emails.where((final e) => e.goto == ConfigController.instance.config!.email).toList();
-    await _box.clear();
-    await _box.addAll(emails);
   }
 
   List<Email> _filterEmail(final Iterable<Email> emails) =>
@@ -186,19 +185,7 @@ class _EmailContentState extends State<EmailContent> {
       final commentFormatted = e.privateComment?.toLowerCaseNoSpace();
       final addressFormatted = e.address.toLowerCaseNoSpace();
       return (commentFormatted != null && commentFormatted.contains(searchFormatted)) || addressFormatted.contains(searchFormatted);
-    })).toList()..sort((final email1, final email2) => email1.id.compareTo(email2.id));
-
-  Future<void> _copyToClipboard({required final Email email}) async {
-    await Clipboard.setData(ClipboardData(text: email.address));
-    if (mounted) {
-      final localizations = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(localizations.copiedEmailToClipboard),
-        ),
-      );
-    }
-  }
+    })).toList()..sort((final email1, final email2) => email1.privateComment!.toLowerCase().compareTo(email2.privateComment!.toLowerCase()));
 }
 
 @immutable
