@@ -30,8 +30,8 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.opdehipt.email_alias"
-    compileSdkVersion 34
-    ndkVersion "26.1.10909125"
+    compileSdkVersion 35
+    ndkVersion "27.2.12479018"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -51,7 +51,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 1000000
         versionName "1.0.0.0"
     }
@@ -66,9 +66,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            signingConfig signingConfigs.release
-        }
         release {
             signingConfig signingConfigs.release
         }
