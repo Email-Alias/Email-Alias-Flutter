@@ -33,6 +33,7 @@ final class SettingsContent extends StatelessWidget {
                       tiles: [
                         _LocaleListTile(controller: controller),
                         _ThemeListTile(controller: controller),
+                        _ClearCacheTile(),
                       ],
                     ),
                   ],
@@ -157,6 +158,24 @@ final class _ThemeListTile extends AbstractSettingsTile {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<SettingsController>('controller', controller));
   }
+}
+
+@immutable
+final class _ClearCacheTile extends AbstractSettingsTile {
+  const _ClearCacheTile();
+
+  @override
+  Widget build(final BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    return SettingsTile.navigation(
+      title: Text(localizations.clearEmailCache),
+      leading: Icon(Icons.delete),
+      onPressed: (final _) async {
+        await emailDatabase.emailDao.deleteAll();
+      },
+    );
+  }
+
 }
 
 extension _Localize on BuildContext {
