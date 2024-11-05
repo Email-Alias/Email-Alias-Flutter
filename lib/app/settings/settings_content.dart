@@ -1,6 +1,7 @@
-import 'package:email_alias/app/config/config_controller.dart';
+import 'package:email_alias/app/database/database.dart';
 import 'package:email_alias/app/routes.dart';
 import 'package:email_alias/app/settings/settings_controller.dart';
+import 'package:email_alias/app/watch_communicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -172,6 +173,7 @@ final class _ClearCacheTile extends AbstractSettingsTile {
       leading: Icon(Icons.delete),
       onPressed: (final _) async {
         await emailDatabase.emailDao.deleteAll();
+        await WatchCommunicator.shared.updateApplicationContext(context: {'type': 'clearCache'});
       },
     );
   }
