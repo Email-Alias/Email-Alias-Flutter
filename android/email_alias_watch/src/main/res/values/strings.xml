@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Email Alias</string>
+    <string name="not_registered">You are not registered. Please register on the Android app.</string>
+    <string name="licenses">Licenses</string>
+    <string name="add_email">Add email</string>
+    <string name="enter_description">Enter description</string>
+    <string name="delete_email">Delete email</string>
+    <string name="qr_code_for">QR-Code for %1$s</string>
+    <string name="email_address">Email Address: %1$s</string>
+    <string name="email_not_found">Error while loading the email</string>
+</resources>

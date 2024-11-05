@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">E-Mail Alias</string>
+    <string name="not_registered">Du bist nicht registriert. Bitte registriere dich in der Android App.</string>
+    <string name="licenses">Lizenzen</string>
+    <string name="add_email">E-Mail hinzufügen</string>
+    <string name="enter_description">Beschreibung eingeben</string>
+    <string name="delete_email">E-Mail löschen</string>
+    <string name="qr_code_for">QR-Code für %1$s</string>
+    <string name="email_address">E-Mail Adresse: %1$s</string>
+    <string name="email_not_found">Fehler beim Laden der E-Mail</string>
+</resources>
