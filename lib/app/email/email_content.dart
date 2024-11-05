@@ -1,17 +1,15 @@
 import 'dart:async';
 
 import 'package:email_alias/app/config/config_controller.dart';
-import 'package:email_alias/app/email/add_email_content.dart';
+import 'package:email_alias/app/database/database.dart';
+import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/email/api.dart' as api;
-import 'package:email_alias/app/email/email.dart';
-import 'package:email_alias/app/routes.dart';
+import 'package:email_alias/app/keyboard_listener.dart';
 import 'package:email_alias/app/settings/settings_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/adapters.dart';
 
 @immutable
 final class EmailContent extends StatefulWidget {
