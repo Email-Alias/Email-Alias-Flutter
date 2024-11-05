@@ -14,32 +14,32 @@ final class AliasApp extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final controller = SettingsController();
-    return ValueListenableBuilder(
-      valueListenable: controller.settingsListenable,
-      builder: (final _, final __, final ___) =>
-        MaterialApp.router(
-          theme: ThemeData.from(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.green,
+    return ToastificationWrapper(
+      child: ValueListenableBuilder(
+        valueListenable: controller,
+        builder: (final _, final data, final __) {
+          final (themeMode, locale) = data;
+          return MaterialApp.router(
+            theme: ThemeData.from(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.green,
+              ),
             ),
-          ),
-          darkTheme: ThemeData.from(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue,
-              brightness: Brightness.dark,
+            darkTheme: ThemeData.from(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.blue,
+                brightness: Brightness.dark,
+              ),
             ),
-          ),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          locale: controller.locale,
-          themeMode: controller.themeMode,
-          routerConfig: _router,
-          debugShowCheckedModeBanner: false,
-        ),
-        final (themeMode, locale) = data;
-        return MaterialApp.router(
-          locale: locale,
-          themeMode: themeMode,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: locale,
+            themeMode: themeMode,
+            routerConfig: _router,
+            debugShowCheckedModeBanner: false,
+          );
+        },
+      ),
     );
   }
 }
