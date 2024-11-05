@@ -1,8 +1,12 @@
 import 'dart:math';
 
 import 'package:email_alias/app/config/config_controller.dart';
+import 'package:email_alias/app/database/database.dart';
+import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/email/api.dart' as api;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,93 +22,115 @@ final class AddEmailContent extends StatefulWidget {
 
 class _AddEmailContentState extends State<AddEmailContent> {
   final _formKey = GlobalKey<FormState>();
-  final _config = ConfigController.instance.config!;
+  final _config = ConfigController.instance.value!;
   final _emailController = TextEditingController();
   final _descriptionFocusNode = FocusNode();
+  final _gotoFocusNode = FocusNode();
 
   var _alias = '';
   var _description = '';
+  var _additionalGoto = '';
 
   @override
   Widget build(final BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final isApple = defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.iOS;
 
-    return SizedBox(
-      width: 410,
-      height: 330,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    localizations.addEmail,
-                    style: theme.textTheme.titleLarge,
-                  ),
-                  TextFormField(
-                    textInputAction: TextInputAction.next,
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      label: Text(localizations.alias),
-                      suffixText: '@${_config.emailDomain}',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          _emailController.text = _random.randomString(length: 20);
-                        },
-                        icon: const Icon(Icons.casino),
+    return CallbackShortcuts(
+      bindings: {
+        SingleActivator(LogicalKeyboardKey.keyR, meta: isApple, control: !isApple, shift: true): _generateRandomEmail,
+      },
+      child: SizedBox(
+        width: 410,
+        height: 330,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      localizations.addEmail,
+                      style: theme.textTheme.titleLarge,
+                    ),
+                    TextFormField(
+                      autofocus: true,
+                      textInputAction: TextInputAction.next,
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        label: Text(localizations.alias),
+                        suffixText: '@${_config.emailDomain}',
+                        suffixIcon: IconButton(
+                          onPressed: _generateRandomEmail,
+                          icon: const Icon(Icons.casino),
+                        ),
                       ),
+                      validator: (final alias) {
+                        if (alias == null || alias.isEmpty) {
+                          return localizations.aliasEmpty;
+                        }
+                        return null;
+                      },
+                      onSaved: (final alias) {
+                        if (alias != null) {
+                          _alias = alias;
+                        }
+                      },
+                      onFieldSubmitted: (final _) {
+                        _descriptionFocusNode.requestFocus();
+                      },
                     ),
-                    validator: (final alias) {
-                      if (alias == null || alias.isEmpty) {
-                        return localizations.aliasEmpty;
-                      }
-                      return null;
-                    },
-                    onSaved: (final alias) {
-                      if (alias != null) {
-                        _alias = alias;
-                      }
-                    },
-                    onFieldSubmitted: (final _) {
-                      _descriptionFocusNode.requestFocus();
-                    },
-                  ),
-                  TextFormField(
-                    focusNode: _descriptionFocusNode,
-                    textInputAction: TextInputAction.send,
-                    decoration: InputDecoration(
-                      label: Text(localizations.description),
+                    TextFormField(
+                      focusNode: _descriptionFocusNode,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                        label: Text(localizations.description),
+                      ),
+                      validator: (final description) {
+                        if (description == null || description.isEmpty) {
+                          return localizations.descriptionEmpty;
+                        }
+                        return null;
+                      },
+                      onSaved: (final description) {
+                        if (description != null) {
+                          _description = description;
+                        }
+                      },
+                      onFieldSubmitted: (final _) async {
+                        _gotoFocusNode.requestFocus();
+                      },
                     ),
-                    validator: (final description) {
-                      if (description == null || description.isEmpty) {
-                        return localizations.descriptionEmpty;
-                      }
-                      return null;
-                    },
-                    onSaved: (final description) {
-                      if (description != null) {
-                        _description = description;
-                      }
-                    },
-                    onFieldSubmitted: (final _) async {
-                      await _saveEmail();
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextButton(
-                    onPressed: () async {
-                      await _saveEmail();
-                    },
-                    child: Text(localizations.add),
-                  ),
-                ],
+                    TextFormField(
+                      focusNode: _gotoFocusNode,
+                      textInputAction: TextInputAction.send,
+                      decoration: InputDecoration(
+                        label: Text(localizations.additionalGoto),
+                      ),
+                      onSaved: (final additionalGoto) {
+                        if (additionalGoto != null) {
+                          _additionalGoto = additionalGoto;
+                        }
+                      },
+                      onFieldSubmitted: (final _) async {
+                        await _saveEmail();
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () async {
+                        await _saveEmail();
+                      },
+                      child: Text(localizations.add),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -113,12 +139,17 @@ class _AddEmailContentState extends State<AddEmailContent> {
     );
   }
 
+  void _generateRandomEmail() {
+    _emailController.text = _random.randomString(length: 20);
+    _descriptionFocusNode.requestFocus();
+  }
+
   Future<void> _saveEmail() async {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
       final emails = await api.getEmails();
-      final email = '$_alias@${_config.emailDomain}';
-      if (emails.where((final e) => e.address == email).isNotEmpty) {
+      final address = '$_alias@${_config.emailDomain}';
+      if (emails.where((final e) => e.address == address).isNotEmpty) {
         if (mounted) {
           final localizations = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
@@ -139,10 +170,35 @@ class _AddEmailContentState extends State<AddEmailContent> {
         return;
       }
 
-      await api.addEmail(address: email, goto: _config.email, privateComment: _description);
+      final goto = _additionalGoto.split(',').map((final goto) => goto.trim()).toSet()
+        ..add(_config.email);
+
+      final int id;
+      if (ConfigController.instance.testMode) {
+        final emails = await emailDatabase.emailDao.getAll();
+        emails.sort((final e1, final e2) => e1.id.compareTo(e2.id));
+        id = emails.last.id + 1;
+      }
+      else {
+        id = await api.addEmail(
+          address: address,
+          privateComment: _description,
+          goto: goto,
+        );
+      }
+
+      final email = Email(
+        id: id,
+        address: address,
+        privateComment: _description,
+        goto: goto,
+        active: true,
+      );
 
       if (mounted) {
-        context.pop(true);
+        final localizations = AppLocalizations.of(context)!;
+        context.pop(email);
+        await email.copyToClipboard(localizations: localizations);
       }
     }
   }

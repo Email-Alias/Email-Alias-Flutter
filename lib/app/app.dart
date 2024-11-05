@@ -3,6 +3,7 @@ import 'package:email_alias/app/settings/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:toastification/toastification.dart';
 
 final _router = GoRouter(routes: $appRoutes);
 
@@ -35,6 +36,10 @@ final class AliasApp extends StatelessWidget {
           routerConfig: _router,
           debugShowCheckedModeBanner: false,
         ),
+        final (themeMode, locale) = data;
+        return MaterialApp.router(
+          locale: locale,
+          themeMode: themeMode,
     );
   }
 }

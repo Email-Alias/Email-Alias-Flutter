@@ -11,9 +11,9 @@ final class HomeContent extends StatelessWidget {
   Widget build(final BuildContext context) {
     final configController = ConfigController();
     return ValueListenableBuilder(
-      valueListenable: configController.configListenable,
-      builder: (final _, final __, final ___) {
-        if (configController.config == null) {
+      valueListenable: configController,
+      builder: (final _, final value, final ___) {
+        if (value == null) {
           return const ConfigContent();
         }
         return const EmailContent();
