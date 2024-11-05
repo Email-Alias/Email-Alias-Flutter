@@ -15,10 +15,6 @@ RouteBase get $homeRoute => GoRouteData.$route(
       factory: $HomeRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
-          path: 'detail',
-          factory: $DetailEmailRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
           path: 'settings',
           factory: $SettingsRouteExtension._fromState,
           routes: [
@@ -36,30 +32,6 @@ extension $HomeRouteExtension on HomeRoute {
 
   String get location => GoRouteData.$location(
         '/',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $DetailEmailRouteExtension on DetailEmailRoute {
-  static DetailEmailRoute _fromState(GoRouterState state) => DetailEmailRoute(
-        comment: state.uri.queryParameters['comment']!,
-        address: state.uri.queryParameters['address']!,
-      );
-
-  String get location => GoRouteData.$location(
-        '/detail',
-        queryParams: {
-          'comment': comment,
-          'address': address,
-        },
       );
 
   void go(BuildContext context) => context.go(location);
