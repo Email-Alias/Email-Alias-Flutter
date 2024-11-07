@@ -55,7 +55,7 @@ final class Email {
   }
 }
 
-Future<void> showAddEmailDialog({required final BuildContext context}) async {
+Future<Email?> showAddEmailDialog({required final BuildContext context}) async {
   final email = await showDialog<Email>(
     context: context,
     builder: (final _) =>
@@ -65,11 +65,7 @@ Future<void> showAddEmailDialog({required final BuildContext context}) async {
         ),
       ),
   );
-  if (email != null) {
-    if (context.mounted) {
-      showEmailDetail(context: context, email: email);
-    }
-  }
+  return email;
 }
 
 Future<void> loadEmails() async {
@@ -100,8 +96,9 @@ Future<void> loadEmails() async {
 void showEmailDetail({
   required final BuildContext context,
   required final Email email,
+  required final void Function(Email?) emailCreatedCallback,
 }) {
   SplitView.of(context).setSide(
-    DetailEmailContent(email: email),
+    DetailEmailContent(email: email, emailCreatedCallback: emailCreatedCallback),
   );
 }
