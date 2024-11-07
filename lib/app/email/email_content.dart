@@ -28,13 +28,21 @@ class _EmailContentState extends State<EmailContent> {
   @override
   void initState() {
     unawaited(loadEmails());
-    _controller.addListener(() {
-      setState(() {
-        _search = _controller.text;
-      });
-      _searchContext?.findAncestorStateOfType()?.setState(() {});
-    });
+    _controller.addListener(_updateSearch);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.removeListener(_updateSearch);
+  }
+
+  void _updateSearch() {
+    setState(() {
+      _search = _controller.text;
+    });
+    _searchContext?.findAncestorStateOfType()?.setState(() {});
   }
 
   @override
