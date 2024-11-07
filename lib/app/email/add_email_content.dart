@@ -194,6 +194,8 @@ class _AddEmailContentState extends State<AddEmailContent> {
         goto: goto,
         active: true,
       );
+      
+      await emailDatabase.emailDao.insertEmail(email);
 
       if (mounted) {
         final localizations = AppLocalizations.of(context)!;
