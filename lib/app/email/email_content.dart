@@ -144,6 +144,9 @@ class _EmailContentState extends State<EmailContent> {
                                 ),
                             ),
                           onDismissed: (final _) async {
+                            if (_currentSelectedEmail == email.id) {
+                              SplitView.of(context).setSide(const EmailPlaceholderContent());
+                            }
                             if (!ConfigController.instance.testMode) {
                               await api.deleteEmail(id: email.id);
                             }
