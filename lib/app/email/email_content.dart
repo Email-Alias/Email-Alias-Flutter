@@ -4,11 +4,13 @@ import 'package:email_alias/app/config/config_controller.dart';
 import 'package:email_alias/app/database/database.dart';
 import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/email/api.dart' as api;
+import 'package:email_alias/app/email/email_placeholder_content.dart';
 import 'package:email_alias/app/keyboard_listener.dart';
 import 'package:email_alias/app/settings/settings_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_split_view/flutter_split_view.dart';
 import 'package:go_router/go_router.dart';
 
 @immutable
@@ -24,6 +26,7 @@ class _EmailContentState extends State<EmailContent> {
 
   var _search = '';
   BuildContext? _searchContext;
+  int? _currentSelectedEmail = null;
 
   @override
   void initState() {
@@ -49,6 +52,7 @@ class _EmailContentState extends State<EmailContent> {
   Widget build(final BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return EmailKeyboardListener(
+      emailCreatedCallback: _emailSelected,
       child: StreamBuilder(
         stream: emailDatabase.emailDao.getAllStream(),
         builder: (final _, final snapshot) {
@@ -59,7 +63,8 @@ class _EmailContentState extends State<EmailContent> {
               actions: [
                 IconButton(
                   onPressed: () async {
-                    await showAddEmailDialog(context: context);
+                    final email = await showAddEmailDialog(context: context);
+                    _emailSelected(email);
                   },
                   icon: const Icon(Icons.add),
                 ),
@@ -87,6 +92,7 @@ class _EmailContentState extends State<EmailContent> {
                         _searchContext = context;
                         return _filterEmail(snapshot.data ?? []).map((final e) => _EmailListTile(
                           email: e,
+                          selected: false,
                           onTap: () {
                             controller.closeView(e.privateComment);
                             setState(() {
@@ -145,11 +151,9 @@ class _EmailContentState extends State<EmailContent> {
                           },
                           child: _EmailListTile(
                             email: email,
+                            selected: email.id == _currentSelectedEmail,
                             onTap: () {
-                              showEmailDetail(
-                                context: context,
-                                email: email,
-                              );
+                              _emailSelected(email);
                             },
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -185,6 +189,17 @@ class _EmailContentState extends State<EmailContent> {
     );
   }
 
+  void _emailSelected(final Email? email) {
+    if (email != null) {
+      setState(() {
+        _currentSelectedEmail = email.id;
+      });
+      if (context.mounted) {
+        showEmailDetail(context: context, email: email, emailCreatedCallback: _emailSelected);
+      }
+    }
+  }
+
   List<Email> _filterEmail(final Iterable<Email> emails) =>
     (_search.isEmpty ? emails : emails.where((final e) {
       final searchFormatted = _search.toLowerCaseNoSpace();
@@ -196,17 +211,20 @@ class _EmailContentState extends State<EmailContent> {
 
 @immutable
 final class _EmailListTile extends StatelessWidget {
-  const _EmailListTile({required this.email, this.trailing, this.onTap});
+  const _EmailListTile({required this.email, required this.selected, this.trailing, this.onTap});
 
   final Email email;
+  final bool selected;
   final Widget? trailing;
   final void Function()? onTap;
 
   @override
   Widget build(final BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final selectedColor = Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 50, 50, 50) : Color.fromARGB(255, 200, 200, 200);
     return ListTile(
       title: Text(email.description(localizations: localizations)),
+      tileColor: selected ? selectedColor : null,
       subtitle: Text(email.address),
       trailing: trailing,
       onTap: onTap,
@@ -218,6 +236,7 @@ final class _EmailListTile extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty<Email>('email', email))
+      ..add(DiagnosticsProperty<bool>('selected', selected))
       ..add(ObjectFlagProperty<void Function()?>.has('onTap', onTap));
   }
 }

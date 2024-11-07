@@ -12,9 +12,10 @@ import 'package:share_plus/share_plus.dart';
 
 @immutable
 final class DetailEmailContent extends StatelessWidget {
-  DetailEmailContent({required this.email, super.key});
+  DetailEmailContent({required this.email, required this.emailCreatedCallback, super.key});
 
   final Email email;
+  final void Function(Email?) emailCreatedCallback;
   final _additionalGotoController = TextEditingController();
 
   @override
@@ -23,6 +24,7 @@ final class DetailEmailContent extends StatelessWidget {
     final qrCode = _generateQrCode();
     _additionalGotoController.text = email.goto.where((final e) => e != ConfigController.instance.value!.email).join(',');
     return EmailKeyboardListener(
+      emailCreatedCallback: emailCreatedCallback,
       child: Scaffold(
         appBar: AppBar(
           title: Text(email.privateComment!),
@@ -88,7 +90,9 @@ final class DetailEmailContent extends StatelessWidget {
   @override
   void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Email>('email', email));
+    properties
+      ..add(DiagnosticsProperty<Email>('email', email))
+      ..add(ObjectFlagProperty<void Function(Email?)>.has('emailCreatedCallback', emailCreatedCallback));
   }
 
   Uint8List _generateQrCode() =>
