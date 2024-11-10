@@ -17,6 +17,30 @@
           }
         }
       }
+    },
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Email Alias"
+          }
+        }
+      }
+    },
+    "NSHumanReadableCopyright" : {
+      "comment" : "Copyright (human-readable)",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Copyright © 2024 com.opdehipt. All rights reserved."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
