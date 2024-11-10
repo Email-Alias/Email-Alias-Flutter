@@ -12,8 +12,11 @@ final class EmailPlaceholderContent extends StatelessWidget {
       appBar: AppBar(
         title: Text(localizations.selectEmail),
       ),
-      body: Center(
-        child: Text(localizations.selectEmailBody),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: Text(localizations.selectEmailBody),
+        ),
       ),
     );
   }
