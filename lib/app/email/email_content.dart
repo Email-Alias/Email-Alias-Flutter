@@ -26,7 +26,7 @@ class _EmailContentState extends State<EmailContent> {
 
   var _search = '';
   BuildContext? _searchContext;
-  int? _currentSelectedEmail = null;
+  int? _currentSelectedEmail;
 
   @override
   void initState() {

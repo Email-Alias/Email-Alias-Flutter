@@ -48,7 +48,7 @@ final class DetailEmailContent extends StatelessWidget {
                      qrCode,
                      mimeType: 'image/png',
                     );
-                    await Share.shareXFiles([image]);
+                    await SharePlus.instance.share(ShareParams(files: [image]));
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

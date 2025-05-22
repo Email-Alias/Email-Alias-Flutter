@@ -19,7 +19,6 @@ linter:
     test_types_in_equals: true
     throw_in_finally: true
     unnecessary_statements: true
-    unsafe_html: true
 
     always_declare_return_types: true
     always_put_control_body_on_new_line: true
@@ -52,7 +51,6 @@ linter:
     deprecated_consistency: true
     directives_ordering: true
     do_not_use_environment: true
-    enable_null_safety: true # experimental
     eol_at_end_of_file: true
     flutter_style_todos: true
     implicit_call_tearoffs: true
@@ -65,7 +63,6 @@ linter:
     omit_local_variable_types: true
     one_member_abstracts: true
     only_throw_errors: true
-    package_api_docs: true
     parameter_assignments: true
     prefer_asserts_in_initializer_lists: true
     prefer_asserts_with_message: true
