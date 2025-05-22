@@ -17,17 +17,17 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   flutter_settings_ui: ^3.0.0
   flutter_split_view: ^1.0.2-pre
-  go_router: ^14.0.0
+  go_router: ^15.0.0
   http: ^1.0.0
   image: ^4.0.0
-  intl: ^0.19.0
+  intl: ^0.20.2
   json_annotation: ^4.9.0
   keymap: ^0.0.92
   qr_image: ^1.0.0
-  share_plus: ^10.0.0
+  share_plus: ^11.0.0
   shared_preferences: ^2.0.0
   sqflite: ^2.0.0
-  toastification: ^2.3.0
+  toastification: ^3.0.0
   url_launcher: ^6.0.0
 
 dev_dependencies:
