@@ -7,9 +7,9 @@ import 'package:email_alias/app/email/api.dart' as api;
 import 'package:email_alias/app/email/email_placeholder_content.dart';
 import 'package:email_alias/app/keyboard_listener.dart';
 import 'package:email_alias/app/settings/settings_icon.dart';
+import 'package:email_alias/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_split_view/flutter_split_view.dart';
 import 'package:go_router/go_router.dart';
 

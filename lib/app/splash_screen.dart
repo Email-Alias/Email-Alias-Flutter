@@ -1,8 +1,8 @@
 import 'package:email_alias/app/app.dart';
 import 'package:email_alias/initialization.dart';
+import 'package:email_alias/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

@@ -4,8 +4,8 @@ import 'package:email_alias/app/database/database.dart';
 import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/email/api.dart';
 import 'package:email_alias/app/settings/settings_icon.dart';
+import 'package:email_alias/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @immutable
 final class ConfigContent extends StatefulWidget {
