@@ -12,7 +12,26 @@ struct _MyApplication {
   char** dart_entrypoint_arguments;
 };
 
+struct AppLocalization {
+  const gchar* title;
+};
+
+AppLocalization german_localization = {
+  "E-Mail Alias"
+};
+
+AppLocalization english_localization = {
+  "Email Alias"
+};
+
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
+
+static AppLocalization get_localization() {
+  if (const auto language = gtk_get_default_language(); pango_language_matches(language, "de")) {
+    return german_localization;
+  }
+  return english_localization;
+}
 
 // Implements GApplication::activate.
 static void my_application_activate(GApplication* application) {
@@ -37,14 +56,16 @@ static void my_application_activate(GApplication* application) {
     }
   }
 #endif
+  const AppLocalization localization = get_localization();
+
   if (use_header_bar) {
     GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
     gtk_widget_show(GTK_WIDGET(header_bar));
-    gtk_header_bar_set_title(header_bar, "email_alias");
+    gtk_header_bar_set_title(header_bar, localization.title);
     gtk_header_bar_set_show_close_button(header_bar, TRUE);
     gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
   } else {
-    gtk_window_set_title(window, "email_alias");
+    gtk_window_set_title(window, localization.title);
   }
 
   gtk_window_set_default_size(window, 1280, 720);
