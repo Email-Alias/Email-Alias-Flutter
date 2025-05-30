@@ -1,5 +1,4 @@
 import 'package:email_alias/app/config/config_controller.dart';
-import 'package:email_alias/app/database/database.dart';
 import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/email/api.dart';
 import 'package:email_alias/app/keyboard_listener.dart';
@@ -73,7 +72,7 @@ final class DetailEmailContent extends StatelessWidget {
                     final goto = _additionalGotoController.text.split(',').map((final e) => e.trim()).toSet()
                       ..add(ConfigController.instance.value!.email);
                     email.goto = goto;
-                    await emailDatabase.emailDao.updateEmail(email);
+                    await Email.hiveBox.put(email.id, email);
                     await updateEmail(id: email.id, goto: goto);
                   },
                   child: Text(localizations.save),

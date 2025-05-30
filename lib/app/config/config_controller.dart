@@ -1,5 +1,5 @@
 import 'package:email_alias/app/config/config.dart';
-import 'package:email_alias/app/database/database.dart';
+import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/email/api.dart';
 import 'package:email_alias/app/watch_communicator.dart';
 import 'package:flutter/foundation.dart';
@@ -42,7 +42,7 @@ final class ConfigController extends ValueListenable<Config?> {
     await _prefs.remove('email');
     await _prefs.remove('apiDomain');
     await _secureStorage.delete(key: 'apiKey');
-    await emailDatabase.emailDao.deleteAll();
+    await Email.hiveBox.deleteAll(Email.hiveBox.keys);
     await WatchCommunicator.shared.updateApplicationContext(context: {'type': 'logout'});
     for (final callback in _callbacks) {
       callback();

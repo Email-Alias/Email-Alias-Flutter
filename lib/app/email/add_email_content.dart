@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:email_alias/app/config/config_controller.dart';
-import 'package:email_alias/app/database/database.dart';
 import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/email/api.dart' as api;
 import 'package:email_alias/l10n/app_localizations.dart';
@@ -175,8 +174,8 @@ class _AddEmailContentState extends State<AddEmailContent> {
 
       final int id;
       if (ConfigController.instance.testMode) {
-        final emails = await emailDatabase.emailDao.getAll();
-        emails.sort((final e1, final e2) => e1.id.compareTo(e2.id));
+        final emails = Email.hiveBox.values.toList()
+        ..sort((final e1, final e2) => e1.id.compareTo(e2.id));
         id = emails.last.id + 1;
       }
       else {
@@ -195,7 +194,7 @@ class _AddEmailContentState extends State<AddEmailContent> {
         active: true,
       );
       
-      await emailDatabase.emailDao.insertEmail(email);
+      await Email.hiveBox.put(email.id, email);
 
       if (mounted) {
         final localizations = AppLocalizations.of(context)!;

@@ -1,6 +1,5 @@
 import 'package:email_alias/app/config/config.dart';
 import 'package:email_alias/app/config/config_controller.dart';
-import 'package:email_alias/app/database/database.dart';
 import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/email/api.dart';
 import 'package:email_alias/app/settings/settings_icon.dart';
@@ -170,14 +169,14 @@ class _ConfigContentState extends State<ConfigContent> {
   }
   
   Future<void> _insertTestEmails() async {
-    await emailDatabase.emailDao.insertEmails([
-      Email(id: 0, address: 'vAcd8HJOj6h9Hfq9n8F0@example.com', privateComment: 'Apple', goto: {testEmail}, active: true),
-      Email(id: 1, address: 'gQo5Nu.H7j774eh3mscM@example.com', privateComment: 'Google', goto: {testEmail}, active: true),
-      Email(id: 2, address: 'FPOjzL0h86Qq9yTZ8Ix4@example.com', privateComment: 'Netflix', goto: {testEmail}, active: true),
-      Email(id: 3, address: 'glELoo9GWGnpT0VIZujM@example.com', privateComment: 'GitHub', goto: {testEmail}, active: true),
-      Email(id: 4, address: 'nI0Ok0Q8x9hNutIiFRAK@example.com', privateComment: 'Facebook', goto: {testEmail}, active: true),
-      Email(id: 5, address: 'yugS_xb992eLm3jRlk3Z@example.com', privateComment: 'Microsoft', goto: {testEmail}, active: true),
-      Email(id: 6, address: '11iLJ6HK6jshFzqFOo6P@example.com', privateComment: 'Amazon', goto: {testEmail}, active: true),
-    ]);
+    await Email.hiveBox.putAll({
+      0: Email(id: 0, address: 'vAcd8HJOj6h9Hfq9n8F0@example.com', privateComment: 'Apple', goto: {testEmail}, active: true),
+      1: Email(id: 1, address: 'gQo5Nu.H7j774eh3mscM@example.com', privateComment: 'Google', goto: {testEmail}, active: true),
+      2: Email(id: 2, address: 'FPOjzL0h86Qq9yTZ8Ix4@example.com', privateComment: 'Netflix', goto: {testEmail}, active: true),
+      3: Email(id: 3, address: 'glELoo9GWGnpT0VIZujM@example.com', privateComment: 'GitHub', goto: {testEmail}, active: true),
+      4: Email(id: 4, address: 'nI0Ok0Q8x9hNutIiFRAK@example.com', privateComment: 'Facebook', goto: {testEmail}, active: true),
+      5: Email(id: 5, address: 'yugS_xb992eLm3jRlk3Z@example.com', privateComment: 'Microsoft', goto: {testEmail}, active: true),
+      6: Email(id: 6, address: '11iLJ6HK6jshFzqFOo6P@example.com', privateComment: 'Amazon', goto: {testEmail}, active: true),
+    });
   }
 }

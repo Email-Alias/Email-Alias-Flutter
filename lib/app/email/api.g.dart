@@ -59,25 +59,17 @@ _UpdateEmailAttributes _$UpdateEmailAttributesFromJson(
     );
 
 Map<String, dynamic> _$UpdateEmailAttributesToJson(
-    _UpdateEmailAttributes instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(
-      'goto',
-      _$JsonConverterToJson<String, Set<String>>(
-          instance.goto, const StringToSetConverter().toJson));
-  writeNotNull(
-      'active',
-      _$JsonConverterToJson<int, bool>(
-          instance.active, const IntToBoolConverter().toJson));
-  return val;
-}
+        _UpdateEmailAttributes instance) =>
+    <String, dynamic>{
+      if (_$JsonConverterToJson<String, Set<String>>(
+              instance.goto, const StringToSetConverter().toJson)
+          case final value?)
+        'goto': value,
+      if (_$JsonConverterToJson<int, bool>(
+              instance.active, const IntToBoolConverter().toJson)
+          case final value?)
+        'active': value,
+    };
 
 Value? _$JsonConverterFromJson<Json, Value>(
   Object? json,
