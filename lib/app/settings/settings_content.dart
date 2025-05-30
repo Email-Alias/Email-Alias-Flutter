@@ -1,4 +1,4 @@
-import 'package:email_alias/app/database/database.dart';
+import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/routes.dart';
 import 'package:email_alias/app/settings/settings_controller.dart';
 import 'package:email_alias/app/watch_communicator.dart';
@@ -172,7 +172,7 @@ final class _ClearCacheTile extends AbstractSettingsTile {
       title: Text(localizations.clearEmailCache),
       leading: Icon(Icons.delete),
       onPressed: (final _) async {
-        await emailDatabase.emailDao.deleteAll();
+        await Email.hiveBox.deleteAll(Email.hiveBox.keys);
         await WatchCommunicator.shared.updateApplicationContext(context: {'type': 'clearCache'});
       },
     );

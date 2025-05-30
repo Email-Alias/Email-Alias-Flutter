@@ -1,28 +1,27 @@
 import 'package:email_alias/app/config/config_controller.dart';
-import 'package:email_alias/app/database/database.dart';
 import 'package:email_alias/app/email/add_email_content.dart';
 import 'package:email_alias/app/email/api.dart' as api;
 import 'package:email_alias/app/email/detail_email_content.dart';
 import 'package:email_alias/app/json_converters.dart';
 import 'package:email_alias/l10n/app_localizations.dart';
-import 'package:floor/floor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_split_view/flutter_split_view.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:toastification/toastification.dart';
 
 part 'email.g.dart';
 
-@entity
 @JsonSerializable(fieldRename: FieldRename.snake)
-final class Email {
+final class Email extends HiveObject {
   Email({required this.id, required this.address, required this.privateComment, required this.goto, required this.active});
 
   factory Email.fromJson(final Map<String, dynamic> json) => _$EmailFromJson(json);
 
-  @primaryKey
+  static Box<Email> get hiveBox => Hive.box<Email>('emails');
+
   final int id;
   final String address;
   final String? privateComment;
@@ -73,22 +72,22 @@ Future<void> loadEmails() async {
     var emails = await api.getEmails();
     emails = emails.where((final e) => e.goto.contains(ConfigController.instance.value!.email)).toList();
 
-    final cachedEmails = await emailDatabase.emailDao.getAll();
+    final cachedEmails = Email.hiveBox.values;
     for (final email in emails) {
       final firstCached = cachedEmails.where((final e) => e.id == email.id).firstOrNull;
       if (firstCached != null) {
         if (firstCached != email) {
-          await emailDatabase.emailDao.updateEmail(email);
+          await Email.hiveBox.put(email.id, email);
         }
       }
       else {
-        await emailDatabase.emailDao.insertEmail(email);
+        await Email.hiveBox.put(email.id, email);
       }
     }
 
     final deleteEmails = cachedEmails.where((final email) => emails.where((final e) => email.id == e.id).isEmpty);
     for (final email in deleteEmails) {
-      await emailDatabase.emailDao.deleteEmail(email);
+      await Email.hiveBox.delete(email.id);
     }
   }
 }

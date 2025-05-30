@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:email_alias/app/config/config_controller.dart';
-import 'package:email_alias/app/database/database.dart';
 import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/email/api.dart' as api;
 import 'package:email_alias/app/email/email_placeholder_content.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_split_view/flutter_split_view.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 
 @immutable
 final class EmailContent extends StatefulWidget {
@@ -53,10 +53,10 @@ class _EmailContentState extends State<EmailContent> {
     final localizations = AppLocalizations.of(context)!;
     return EmailKeyboardListener(
       emailCreatedCallback: _emailSelected,
-      child: StreamBuilder(
-        stream: emailDatabase.emailDao.getAllStream(),
+      child: ListenableBuilder(
+        listenable: Email.hiveBox.listenable(),
         builder: (final _, final snapshot) {
-          final emails = _filterEmail(snapshot.data ?? []);
+          final emails = _filterEmail(Email.hiveBox.values);
           return Scaffold(
             appBar: AppBar(
               title: Text(localizations.emails),
@@ -90,7 +90,7 @@ class _EmailContentState extends State<EmailContent> {
                       searchController: _controller,
                       suggestionsBuilder: (final context, final controller) {
                         _searchContext = context;
-                        return _filterEmail(snapshot.data ?? []).map((final e) => _EmailListTile(
+                        return _filterEmail(Email.hiveBox.values).map((final e) => _EmailListTile(
                           email: e,
                           selected: false,
                           onTap: () {
@@ -150,7 +150,7 @@ class _EmailContentState extends State<EmailContent> {
                             if (!ConfigController.instance.testMode) {
                               await api.deleteEmail(id: email.id);
                             }
-                            await emailDatabase.emailDao.deleteEmail(email);
+                            await Email.hiveBox.delete(email.id);
                           },
                           child: _EmailListTile(
                             email: email,
@@ -171,7 +171,7 @@ class _EmailContentState extends State<EmailContent> {
                                   onPressed: () async {
                                     email.active = !email.active;
                                     await api.updateEmail(id: email.id, active: email.active);
-                                    await emailDatabase.emailDao.updateEmail(email);
+                                    await Email.hiveBox.put(email.id, email);
                                   },
                                   icon: email.active ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
                                 ),
