@@ -9,7 +9,8 @@ import 'package:browser_cli/settings_controller.dart';
 
 Future<Map<String, dynamic>> getEmails() async {
   final dir = await _getApplicationDocumentsDirectory();
-  Hive.init(join(dir.path, 'email_alias', 'hive'));
+  final tempDir = await _copyHiveDataToTemp(Directory(join(dir.path, 'email_alias', 'hive')));
+  Hive.init(tempDir.path);
   Hive.registerAdapters();
   final configController = ConfigController();
   final settingsController = SettingsController();
@@ -52,6 +53,39 @@ Future<Map<String, dynamic>> getEmails() async {
     "registered": initialized,
     "emails": json
   };
+}
+
+Future<Directory> _copyHiveDataToTemp(Directory srcDir) async {
+  final tempDir = await Directory.systemTemp.createTemp();
+
+  const allowedExtensions = {
+    '.hive',
+    '.hive.meta',
+    '.hive.outdated',
+    '.hive.index',
+    '.hive.compaction',
+  };
+
+  await for (final entity in srcDir.list(recursive: false, followLinks: false)) {
+    if (entity is! File) continue;
+
+    final fileName = basename(entity.path);
+
+    if (fileName.endsWith('.lock') ||
+        fileName.endsWith('.lck') ||
+        fileName.endsWith('.tmp') ||
+        fileName.contains('lock')) {
+      continue;
+    }
+
+    final ext = fileName.contains('.') ? '.${fileName.split('.').skip(1).join('.')}' : '';
+    if (!allowedExtensions.contains(ext)) continue;
+
+    final newPath = join(tempDir.path, fileName);
+    await entity.copy(newPath);
+  }
+
+  return tempDir;
 }
 
 Future<Directory> _getApplicationDocumentsDirectory() async {
