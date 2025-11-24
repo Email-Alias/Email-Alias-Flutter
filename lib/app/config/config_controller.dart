@@ -1,23 +1,30 @@
-import 'package:email_alias/app/config/config.dart';
-import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/email/api.dart';
 import 'package:email_alias/app/watch_communicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared/shared.dart';
 
-final class ConfigController extends ValueListenable<Config?> {
+final class ConfigController extends ConfigControllerShared implements ValueListenable<Config?> {
   factory ConfigController() => instance;
   ConfigController._();
   static final ConfigController instance = ConfigController._();
 
-  late final SharedPreferences _prefs;
-  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
   final List<VoidCallback> _callbacks = [];
+  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+
+  @override
+  void addListener(final VoidCallback listener) {
+    _callbacks.add(listener);
+  }
+
+  @override
+  void removeListener(final VoidCallback listener) {
+    _callbacks.remove(listener);
+  }
 
   Future<void> saveConfig(final Config config) async {
-    await _prefs.setString('email', config.email);
-    await _prefs.setString('apiDomain', config.apiDomain);
+    await configBox.put('email', config.email);
+    await configBox.put('apiDomain', config.apiDomain);
     await _secureStorage.write(key: 'apiKey', value: config.apiKey);
     await WatchCommunicator.shared.updateApplicationContext(
       context: {
@@ -34,13 +41,9 @@ final class ConfigController extends ValueListenable<Config?> {
 
   bool get testMode => value?.apiDomain == testDomain;
 
-  Future<void> initialize() async {
-    _prefs = await SharedPreferences.getInstance();
-  }
-
   Future<void> logout() async {
-    await _prefs.remove('email');
-    await _prefs.remove('apiDomain');
+    await configBox.delete('email');
+    await configBox.delete('apiDomain');
     await _secureStorage.delete(key: 'apiKey');
     await Email.hiveBox.deleteAll(Email.hiveBox.keys);
     await WatchCommunicator.shared.updateApplicationContext(context: {'type': 'logout'});
@@ -49,25 +52,5 @@ final class ConfigController extends ValueListenable<Config?> {
     }
   }
 
-  @override
-  void addListener(final VoidCallback listener) {
-    _callbacks.add(listener);
-  }
-
-  @override
-  void removeListener(final VoidCallback listener) {
-    _callbacks.remove(listener);
-  }
-
   Future<String?> get apiKey async => _secureStorage.read(key: 'apiKey');
-
-  @override
-  Config? get value {
-    final email = _prefs.getString('email');
-    final apiDomain = _prefs.getString('apiDomain');
-    if (email != null && apiDomain != null) {
-      return Config(email: email, apiDomain: apiDomain, apiKey: '');
-    }
-    return null;
-  }
 }

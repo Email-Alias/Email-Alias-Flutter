@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_split_view/flutter_split_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_ce_flutter/adapters.dart';
+import 'package:shared/shared.dart';
 
 @immutable
 final class EmailContent extends StatefulWidget {
@@ -180,7 +181,7 @@ class _EmailContentState extends State<EmailContent> {
                           ),
                         );
                       },
-                      separatorBuilder: (final _, final __) => const Divider(),
+                      separatorBuilder: (final _, final _) => const Divider(),
                     ),
                   ),
                 ],

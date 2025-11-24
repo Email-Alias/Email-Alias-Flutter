@@ -1,10 +1,9 @@
-import 'package:email_alias/app/config/config.dart';
 import 'package:email_alias/app/config/config_controller.dart';
-import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/email/api.dart';
 import 'package:email_alias/app/settings/settings_icon.dart';
 import 'package:email_alias/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:shared/shared.dart';
 
 @immutable
 final class ConfigContent extends StatefulWidget {
@@ -37,14 +36,14 @@ class _ConfigContentState extends State<ConfigContent> {
       ),
       body: Form(
         key: _formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        autovalidateMode: .onUserInteraction,
         child: Padding(
-          padding: const EdgeInsets.all(30),
+          padding: const .all(30),
           child: Column(
             children: [
               TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
+                keyboardType: .emailAddress,
+                textInputAction: .next,
                 decoration: InputDecoration(
                   label: Text(localizations.email),
                 ),
@@ -68,8 +67,8 @@ class _ConfigContentState extends State<ConfigContent> {
               ),
               TextFormField(
                 focusNode: _domainFocusNode,
-                keyboardType: TextInputType.url,
-                textInputAction: TextInputAction.next,
+                keyboardType: .url,
+                textInputAction: .next,
                 decoration: InputDecoration(
                   label: Text(localizations.apiDomain),
                 ),
@@ -93,7 +92,7 @@ class _ConfigContentState extends State<ConfigContent> {
               ),
               TextFormField(
                 focusNode: _apiKeyFocusNode,
-                textInputAction: TextInputAction.done,
+                textInputAction: .done,
                 obscureText: !_showApiKey,
                 decoration: InputDecoration(
                   label: Text(localizations.apiKey),
@@ -129,7 +128,7 @@ class _ConfigContentState extends State<ConfigContent> {
                 child: Text(localizations.save),
               ),
               const Spacer(),
-              Text(localizations.or, textAlign: TextAlign.center),
+              Text(localizations.or, textAlign: .center),
               const Spacer(),
               TextButton(
                 onPressed: _saveTestConfig,

@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-@immutable
 final class StringToSetConverter implements JsonConverter<Set<String>, String> {
   const StringToSetConverter();
 
@@ -12,7 +10,6 @@ final class StringToSetConverter implements JsonConverter<Set<String>, String> {
   String toJson(final Set<String> object) => object.where((final e) => e.isNotEmpty).join(',');
 }
 
-@immutable
 final class IntToBoolConverter implements JsonConverter<bool, int> {
   const IntToBoolConverter();
 

@@ -3,9 +3,15 @@
 // Check in to version control
 
 import 'package:hive_ce/hive.dart';
-import 'package:email_alias/app/database/hive_adapters.dart';
+import 'package:shared/src/hive_adapters.dart';
 
 extension HiveRegistrar on HiveInterface {
+  void registerAdapters() {
+    registerAdapter(EmailAdapter());
+  }
+}
+
+extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(EmailAdapter());
   }

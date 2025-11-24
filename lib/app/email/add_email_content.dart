@@ -6,8 +6,8 @@ import 'package:email_alias/app/email/api.dart' as api;
 import 'package:email_alias/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared/shared.dart';
 
 final _random = Random();
 
@@ -34,25 +34,26 @@ class _AddEmailContentState extends State<AddEmailContent> {
   Widget build(final BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final isApple = defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.iOS;
+    final isApple = defaultTargetPlatform == .macOS || defaultTargetPlatform == .iOS;
 
     return CallbackShortcuts(
       bindings: {
-        SingleActivator(LogicalKeyboardKey.keyR, meta: isApple, control: !isApple, shift: true): _generateRandomEmail,
+        SingleActivator(.keyR, meta: isApple, control: !isApple, shift: true): _generateRandomEmail,
+        SingleActivator(.escape): context.pop,
       },
       child: SizedBox(
         width: 410,
         height: 330,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: .circular(20),
           child: Scaffold(
             body: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const .all(20),
               child: Form(
                 key: _formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
+                autovalidateMode: .onUserInteraction,
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
                   children: [
                     Text(
                       localizations.addEmail,
@@ -60,7 +61,7 @@ class _AddEmailContentState extends State<AddEmailContent> {
                     ),
                     TextFormField(
                       autofocus: true,
-                      textInputAction: TextInputAction.next,
+                      textInputAction: .next,
                       controller: _emailController,
                       decoration: InputDecoration(
                         label: Text(localizations.alias),
@@ -87,7 +88,7 @@ class _AddEmailContentState extends State<AddEmailContent> {
                     ),
                     TextFormField(
                       focusNode: _descriptionFocusNode,
-                      textInputAction: TextInputAction.next,
+                      textInputAction: .next,
                       decoration: InputDecoration(
                         label: Text(localizations.description),
                       ),
@@ -208,6 +209,6 @@ class _AddEmailContentState extends State<AddEmailContent> {
 extension _RandomString on Random {
   String randomString({required final int length}) {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._';
-    return String.fromCharCodes(Iterable.generate(length, (final _) => chars.codeUnitAt(nextInt(chars.length))));
+    return .fromCharCodes(.generate(length, (final _) => chars.codeUnitAt(nextInt(chars.length))));
   }
 }

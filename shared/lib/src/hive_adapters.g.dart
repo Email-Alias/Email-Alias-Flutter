@@ -8,7 +8,7 @@ part of 'hive_adapters.dart';
 
 class EmailAdapter extends TypeAdapter<Email> {
   @override
-  final int typeId = 0;
+  final typeId = 0;
 
   @override
   Email read(BinaryReader reader) {

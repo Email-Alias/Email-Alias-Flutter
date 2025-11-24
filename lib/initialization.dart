@@ -1,16 +1,15 @@
 import 'package:email_alias/app/config/config_controller.dart';
-import 'package:email_alias/app/database/email.dart';
-import 'package:email_alias/app/database/hive_registrar.g.dart';
 import 'package:email_alias/app/settings/settings_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:shared/shared.dart';
+import 'package:path/path.dart';
 
 Future<void> _initializeHive() async {
-  await Hive.initFlutter();
+  await Hive.initFlutter(join('email_alias', 'hive'));
   Hive.registerAdapters();
-  await Hive.openBox<Email>('emails');
+  await Email.openBox();
 }
 
 Future<void> initializeApp() async {

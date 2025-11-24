@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:email_alias/app/config/config_controller.dart';
-import 'package:email_alias/app/database/email.dart';
-import 'package:email_alias/app/json_converters.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:json_annotation/json_annotation.dart';
+import 'package:shared/shared.dart';
 
 part 'api.g.dart';
 

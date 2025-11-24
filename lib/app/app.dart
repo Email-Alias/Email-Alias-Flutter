@@ -17,18 +17,18 @@ final class AliasApp extends StatelessWidget {
     return ToastificationWrapper(
       child: ValueListenableBuilder(
         valueListenable: controller,
-        builder: (final _, final data, final __) {
+        builder: (final _, final data, final _) {
           final (themeMode, locale) = data;
           return MaterialApp.router(
-            theme: ThemeData.from(
-              colorScheme: ColorScheme.fromSeed(
+            theme: .from(
+              colorScheme: .fromSeed(
                 seedColor: Colors.green,
               ),
             ),
-            darkTheme: ThemeData.from(
-              colorScheme: ColorScheme.fromSeed(
+            darkTheme: .from(
+              colorScheme: .fromSeed(
                 seedColor: Colors.blue,
-                brightness: Brightness.dark,
+                brightness: .dark,
               ),
             ),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
