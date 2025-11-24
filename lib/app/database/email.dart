@@ -2,56 +2,37 @@ import 'package:email_alias/app/config/config_controller.dart';
 import 'package:email_alias/app/email/add_email_content.dart';
 import 'package:email_alias/app/email/api.dart' as api;
 import 'package:email_alias/app/email/detail_email_content.dart';
-import 'package:email_alias/app/json_converters.dart';
 import 'package:email_alias/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_split_view/flutter_split_view.dart';
-import 'package:hive_ce/hive.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:shared/shared.dart';
 import 'package:toastification/toastification.dart';
 
-part 'email.g.dart';
+extension EmailUtils on Email {
+  String description({
+    required final AppLocalizations localizations
+  }) => privateComment ?? localizations.noDescription;
 
-@JsonSerializable(fieldRename: FieldRename.snake)
-final class Email extends HiveObject {
-  Email({required this.id, required this.address, required this.privateComment, required this.goto, required this.active});
+  Future<void> copyToClipboard({
+    required final AppLocalizations localizations
+  }) async {
+    await Clipboard.setData(ClipboardData(text: address));
+    toastification.show(
+      description: Text(
+          localizations.copiedEmailToClipboard, textAlign: .center),
+      autoCloseDuration: const Duration(seconds: 2),
+      alignment: .bottomCenter,
+    );
+  }
 
-  factory Email.fromJson(final Map<String, dynamic> json) => _$EmailFromJson(json);
-
-  static Box<Email> get hiveBox => Hive.box<Email>('emails');
-
-  final int id;
-  final String address;
-  final String? privateComment;
-  @StringToSetConverter()
-  Set<String> goto;
-  @IntToBoolConverter()
-  bool active;
-
-  String description({required final AppLocalizations localizations}) => privateComment ?? localizations.noDescription;
-
-  @override
-  bool operator ==(final Object other) =>
-    other is Email &&
+  bool equals(final Email other) =>
     other.id == id &&
     other.address == address &&
     other.privateComment == privateComment &&
     setEquals(other.goto, goto) &&
     other.active == active;
-
-  @override
-  int get hashCode => Object.hash(id, address, privateComment, goto, active);
-
-  Future<void> copyToClipboard({required final AppLocalizations localizations}) async {
-    await Clipboard.setData(ClipboardData(text: address));
-    toastification.show(
-      description: Text(localizations.copiedEmailToClipboard, textAlign: TextAlign.center),
-      autoCloseDuration: const Duration(seconds: 2),
-      alignment: Alignment.bottomCenter,
-    );
-  }
 }
 
 Future<Email?> showAddEmailDialog({required final BuildContext context}) async {
@@ -76,7 +57,7 @@ Future<void> loadEmails() async {
     for (final email in emails) {
       final firstCached = cachedEmails.where((final e) => e.id == email.id).firstOrNull;
       if (firstCached != null) {
-        if (firstCached != email) {
+        if (!firstCached.equals(email)) {
           await Email.hiveBox.put(email.id, email);
         }
       }

@@ -1,4 +1,3 @@
-import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/routes.dart';
 import 'package:email_alias/app/settings/settings_controller.dart';
 import 'package:email_alias/app/watch_communicator.dart';
@@ -6,6 +5,7 @@ import 'package:email_alias/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
+import 'package:shared/shared.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 @immutable
@@ -22,12 +22,12 @@ final class SettingsContent extends StatelessWidget {
       ),
       body: ValueListenableBuilder(
         valueListenable: controller,
-        builder: (final _, final __, final ___) =>
+        builder: (final _, final _, final _) =>
           Column(
             children: [
               Expanded(
                 child: SettingsList(
-                  platform: DevicePlatform.android,
+                  platform: .android,
                   sections: [
                     SettingsSection(
                       title: Text(localizations.general),
@@ -41,13 +41,13 @@ final class SettingsContent extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const .all(8),
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
                   children: [
                     TextButton(
                       onPressed: () async {
-                        await _open(url: Uri.https('github.com', 'svenopdehipt/Email-Alias'));
+                        await _open(url: .https('github.com', 'svenopdehipt/Email-Alias'));
                       },
                       child: Text(localizations.sourceCode),
                     ),

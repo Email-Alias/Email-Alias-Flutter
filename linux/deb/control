@@ -1,0 +1,6 @@
+Package: email-alias
+Depends: libsecret-1-0, libjsoncpp-dev
+Maintainer: Sven
+Version: 1.0.0
+Architecture: <arch>
+Description: App to create aliases for a email on a mailcow server

@@ -4,6 +4,7 @@ import 'package:email_alias/app/email/email_content.dart';
 import 'package:email_alias/app/email/email_placeholder_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_split_view/flutter_split_view.dart';
+import 'package:shared/shared.dart';
 
 @immutable
 final class HomeContent extends StatelessWidget {
@@ -14,7 +15,7 @@ final class HomeContent extends StatelessWidget {
     final configController = ConfigController();
     return ValueListenableBuilder(
       valueListenable: configController,
-      builder: (final _, final value, final ___) {
+      builder: (final _, final value, final _) {
         if (value == null) {
           return const ConfigContent();
         }

@@ -9,22 +9,22 @@ plugins {
 
 android {
     namespace = "com.opdehipt.email_alias"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.opdehipt.email_alias"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
         vectorDrawables {
             useSupportLibrary = true
         }
-
     }
 
     buildTypes {
         release {
+            signingConfig signingConfigs.debug
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
@@ -49,29 +49,29 @@ composeCompiler {
 
 dependencies {
 
-    implementation("com.google.android.gms:play-services-wearable:18.2.0")
-    implementation(platform("androidx.compose:compose-bom:2024.10.01"))
+    implementation("com.google.android.gms:play-services-wearable:19.0.0")
+    implementation(platform("androidx.compose:compose-bom:2025.11.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3-android:1.3.1")
-    implementation("androidx.wear.compose:compose-navigation:1.4.0")
-    implementation("androidx.wear.compose:compose-material3:1.0.0-alpha28")
-    implementation("androidx.wear.compose:compose-foundation:1.4.0")
+    implementation("androidx.compose.material3:material3-android:1.4.0")
+    implementation("androidx.wear.compose:compose-navigation:1.5.5")
+    implementation("androidx.wear.compose:compose-material3:1.5.5")
+    implementation("androidx.wear.compose:compose-foundation:1.5.5")
     implementation("androidx.wear:wear-tooling-preview:1.0.0")
-    implementation("androidx.activity:activity-compose:1.9.3")
-    implementation("androidx.core:core-splashscreen:1.0.1")
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
-    implementation("io.ktor:ktor-client-core:3.0.1")
-    implementation("io.ktor:ktor-client-okhttp:3.0.1")
-    implementation("io.ktor:ktor-client-content-negotiation:3.0.1")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.zxing:core:3.5.3")
-    implementation("androidx.room:room-ktx:2.6.1")
-    implementation("androidx.wear:wear-input:1.1.0")
-    ksp("androidx.room:room-compiler:2.6.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.10.01"))
+    implementation("androidx.activity:activity-compose:1.11.0")
+    implementation("androidx.core:core-splashscreen:1.2.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
+    implementation("io.ktor:ktor-client-core:3.3.2")
+    implementation("io.ktor:ktor-client-okhttp:3.3.2")
+    implementation("io.ktor:ktor-client-content-negotiation:3.3.2")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.google.zxing:core:3.5.4")
+    implementation("androidx.room:room-ktx:2.8.3")
+    implementation("androidx.wear:wear-input:1.2.0")
+    ksp("androidx.room:room-compiler:2.8.3")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2025.11.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")

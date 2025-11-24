@@ -13,15 +13,15 @@ final class SplashScreen extends StatelessWidget {
   Widget build(final BuildContext context) => FutureBuilder(
     future: _future,
     builder: (final _, final snapshot) {
-      if (snapshot.connectionState == ConnectionState.done && !snapshot.hasError) {
+      if (snapshot.connectionState == .done && !snapshot.hasError) {
         return const AliasApp();
       }
       return MaterialApp(
-        darkTheme: ThemeData.dark(),
+        darkTheme: .dark(),
         home: Scaffold(
           body: Center(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 const Icon(
                   Icons.mail,

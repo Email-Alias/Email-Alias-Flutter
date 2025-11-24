@@ -12,7 +12,7 @@ final class WatchCommunicator {
   static final shared = WatchCommunicator._();
 
   Future<void> updateApplicationContext({required final Map<String, Object> context}) async {
-    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+    if (Platform.isAndroid) {
       final methodChannel = MethodChannel('com.opdehipt.email_alias/watch');
       await methodChannel.invokeMethod('updateApplicationContext', context);
     }

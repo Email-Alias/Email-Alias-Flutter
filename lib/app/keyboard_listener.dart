@@ -3,7 +3,7 @@ import 'package:email_alias/app/database/email.dart';
 import 'package:email_alias/app/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:shared/shared.dart';
 
 @immutable
 final class EmailKeyboardListener extends StatelessWidget {
@@ -14,20 +14,20 @@ final class EmailKeyboardListener extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final isApple = defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.iOS;
+    final isApple = defaultTargetPlatform == .macOS || defaultTargetPlatform == .iOS;
     return CallbackShortcuts(
       bindings: {
-        SingleActivator(LogicalKeyboardKey.keyN, meta: isApple, control: !isApple): () async {
+        SingleActivator(.add, meta: isApple, control: !isApple): () async {
           final email = await showAddEmailDialog(context: context);
           emailCreatedCallback(email);
         },
-        SingleActivator(LogicalKeyboardKey.comma, meta: isApple, control: !isApple): () {
+        SingleActivator(.comma, meta: isApple, control: !isApple): () {
           const SettingsRoute().go(context);
         },
-        SingleActivator(LogicalKeyboardKey.keyL, meta: isApple, control: !isApple): () async {
+        SingleActivator(.keyL, meta: isApple, control: !isApple): () async {
           await ConfigController.instance.logout();
         },
-        SingleActivator(LogicalKeyboardKey.keyR, meta: isApple, control: !isApple): () async {
+        SingleActivator(.keyR, meta: isApple, control: !isApple): () async {
           await loadEmails();
         },
       },
