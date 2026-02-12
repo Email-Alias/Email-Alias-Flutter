@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  flutter_secure_storage: ^10.0.0-beta.4
+  flutter_secure_storage: ^10.0.0
   flutter_settings_ui: ^3.0.0
   flutter_split_view: ^1.0.2-pre
   go_router: ^17.0.0
