@@ -62,7 +62,7 @@ object API {
     suspend fun addEmail(context: Context, address: String, privateComment: String, additionalGotos: List<String>): Int? {
         val goto = context.preferences.email.firstOrNull()
         val gotoString = (additionalGotos + listOf(goto)).joinToString(",")
-        val email = EmailReq(true, false, address, gotoString, privateComment)
+        val email = EmailReq(true, false, true, address, gotoString, privateComment)
         val req = baseReq(context, "add/alias")
         req.setBody(email)
         val (success, result) = basicSend(req)
@@ -92,6 +92,7 @@ object API {
 private data class EmailReq(
     val active: Boolean,
     val sogoVisible: Boolean,
+    val senderAllowed: Boolean,
     val address: String,
     val goto: String,
     val privateComment: String,
