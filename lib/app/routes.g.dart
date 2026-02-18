@@ -6,74 +6,78 @@ part of 'routes.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [
-      $homeRoute,
-    ];
+List<RouteBase> get $appRoutes => [$homeRoute];
 
 RouteBase get $homeRoute => GoRouteData.$route(
-      path: '/',
-      factory: $HomeRouteExtension._fromState,
+  path: '/',
+  factory: $HomeRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'settings',
+      factory: $SettingsRoute._fromState,
       routes: [
-        GoRouteData.$route(
-          path: 'settings',
-          factory: $SettingsRouteExtension._fromState,
-          routes: [
-            GoRouteData.$route(
-              path: 'licenses',
-              factory: $LicenseRouteExtension._fromState,
-            ),
-          ],
-        ),
+        GoRouteData.$route(path: 'licenses', factory: $LicenseRoute._fromState),
       ],
-    );
+    ),
+  ],
+);
 
-extension $HomeRouteExtension on HomeRoute {
+mixin $HomeRoute on GoRouteData {
   static HomeRoute _fromState(GoRouterState state) => const HomeRoute();
 
-  String get location => GoRouteData.$location(
-        '/',
-      );
+  @override
+  String get location => GoRouteData.$location('/');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $SettingsRouteExtension on SettingsRoute {
+mixin $SettingsRoute on GoRouteData {
   static SettingsRoute _fromState(GoRouterState state) => const SettingsRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings',
-      );
+  @override
+  String get location => GoRouteData.$location('/settings');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $LicenseRouteExtension on LicenseRoute {
+mixin $LicenseRoute on GoRouteData {
   static LicenseRoute _fromState(GoRouterState state) => const LicenseRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/licenses',
-      );
+  @override
+  String get location => GoRouteData.$location('/settings/licenses');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
