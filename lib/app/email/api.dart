@@ -40,6 +40,7 @@ Future<int> addEmail({required final String address, required final String priva
   final request = _AddEmailRequest(
     active: true,
     sogoVisible: false,
+    senderAllowed: true,
     address: address,
     goto: goto,
     privateComment: privateComment,
@@ -65,10 +66,11 @@ Future<void> deleteEmail({required final int id}) async {
 @immutable
 @JsonSerializable(fieldRename: FieldRename.snake)
 final class _AddEmailRequest {
-  const _AddEmailRequest({required this.active, required this.sogoVisible, required this.address, required this.goto, required this.privateComment});
+  const _AddEmailRequest({required this.active, required this.sogoVisible, required this.senderAllowed, required this.address, required this.goto, required this.privateComment});
 
   final bool active;
   final bool sogoVisible;
+  final bool senderAllowed;
   final String address;
   @StringToSetConverter()
   final Set<String> goto;
