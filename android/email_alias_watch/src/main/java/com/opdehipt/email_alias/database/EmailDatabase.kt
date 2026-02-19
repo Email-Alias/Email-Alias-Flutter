@@ -15,7 +15,7 @@ abstract class EmailDatabase: RoomDatabase() {
     abstract val emailDao: EmailDao
 }
 
-private object Converters {
+object Converters {
     @TypeConverter
     fun fromString(value: String) = value.split(',')
 
