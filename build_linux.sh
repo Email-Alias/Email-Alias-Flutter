@@ -1,6 +1,7 @@
 #!/bin/bash
-# sudo apt update && sudo apt install libsecret-1-dev libjsoncpp-dev clang cmake git ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev dpkg-dev debhelper fakeroot lintian rpm
+sudo apt update && sudo apt install libsecret-1-dev libjsoncpp-dev clang cmake git ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev dpkg-dev debhelper fakeroot lintian rpm
 
+fluuter config --enable-linux-desktop
 flutter pub get
 flutter gen-l10n
 flutter build linux --release --obfuscate --split-debug-info=build/debug-info
