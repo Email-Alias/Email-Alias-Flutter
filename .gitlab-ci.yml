@@ -25,7 +25,8 @@ build_linux:
   artifacts:
     name: "linux-build-$CI_COMMIT_SHORT_SHA"
     paths:
-      - build/linux/x64/release/bundle/
+      - build/email-alias.deb
+      - build/email-alias.rpm
     expire_in: 7 days
 
   only:
