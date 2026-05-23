@@ -24,7 +24,7 @@ dependencies:
   intl: ^0.20.2
   json_annotation: ^4.9.0
   qr_image: ^1.0.0
-  share_plus: ^12.0.0
+  share_plus: ^13.0.0
   shared:
     path: shared
   sqflite: ^2.0.0
