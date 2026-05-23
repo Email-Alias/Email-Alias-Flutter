@@ -2,7 +2,7 @@
 
 set -e
 
-sudo apt update && sudo apt install -y libsecret-1-dev libjsoncpp-dev clang cmake git ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev dpkg-dev debhelper fakeroot lintian rpm ruby ruby-dev build-essential
+sudo apt update && sudo apt install -y libsecret-1-dev libjsoncpp-dev clang cmake git ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev dpkg-dev debhelper fakeroot lintian rpm ruby ruby-dev build-essential zstd
 gem install --no-document fpm
 
 flutter config --enable-linux-desktop
