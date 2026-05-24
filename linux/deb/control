@@ -1,5 +1,5 @@
 Package: email-alias
-Depends: libsecret-1-0, libjsoncpp-dev
+Depends: libsecret-1-0, libjsoncpp25
 Maintainer: Sven
 Version: 1.0.0
 Architecture: <arch>

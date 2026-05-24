@@ -32,5 +32,5 @@ rm -f email-alias.deb
 rm -f email-alias.rpm
 dpkg-deb --build deb/email-alias
 mv deb/email-alias*.deb email-alias.deb
-fpm -s deb -t rpm email-alias.deb
+fpm -s deb -t rpm --no-auto-depends --depends libsecret --depends jsoncpp email-alias.deb
 mv email-alias*.rpm email-alias.rpm
